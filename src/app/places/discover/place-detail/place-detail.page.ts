@@ -82,37 +82,31 @@ export class PlaceDetailPage implements OnInit {
 
   openBookingModal(mode: 'select' | 'random') {
     console.log(mode);
-    this.modalCtrl
-      .create({
+    this.modalCtrl.create({
         component: CreateBookingComponent,
         componentProps: { selectedPlace: this.place, selectedMode: mode }
-      })
-      .then(modalEl => {
+      }).then(modalEl => {
         modalEl.present();
         return modalEl.onDidDismiss();
-      })
-      .then(resultData => {
+      }).then(resultData => {
         if (resultData.role === 'confirm') {
-          this.loadingCtrl
-            .create({ message: 'Booking place...' })
-            .then(loadingEl => {
-              loadingEl.present();
-              const data = resultData.data.bookingData;
-              this.bookingService
-                .addBooking(
-                  this.place.id,
-                  this.place.title,
-                  this.place.imageUrl,
-                  data.firstName,
-                  data.lastName,
-                  data.guestNumber,
-                  data.startDate,
-                  data.endDate
-                )
-                .subscribe(() => {
-                  loadingEl.dismiss();
-                });
+          this.loadingCtrl.create({ message: 'Booking place...' }).then(loadingEl => {
+            loadingEl.present();
+            const data = resultData.data.bookingData;
+            this.bookingService.addBooking(
+              this.place.id,
+              this.place.title,
+              this.place.imageUrl,
+              data.firstName,
+              data.lastName,
+              data.guestNumber,
+              data.startDate,
+              data.endDate
+            )
+            .subscribe(() => {
+              loadingEl.dismiss();
             });
+          });
         }
       });
   }
